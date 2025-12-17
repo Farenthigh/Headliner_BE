@@ -1,0 +1,32 @@
+version: '3.1'
+
+services:
+  server:
+    restart: on-failure
+    container_name: headliner-be
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      PORT: ${PORT}
+      DB_HOST: headliner-db
+      DB_PORT: 5432
+      DB_USER: ${DB_USER}
+      DB_PASSWORD:  ${DB_PASSWORD}
+      DB_SCHEMA: headliner
+    ports:
+      - "${PORT}:${PORT}"
+
+  postgres:
+    image: postgres:alpine
+    container_name: headliner-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: headliner
+    volumes:
+      - psql_volume_bp:/var/lib/postgresql/data
+volumes:
+  psql_volume_bp:
