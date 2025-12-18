@@ -26,3 +26,11 @@ func (g *UsersGorm) Register(Users *Entities.Users) error {
 	}
 	return nil
 }
+
+func (g *UsersGorm) GetUserByEmail(email string) (*Entities.Users, error) {
+	var user Entities.Users
+	if err := g.db.Where("email = ?", email).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}

@@ -15,4 +15,5 @@ func InitUsersRoute(app *fiber.App, db *gorm.DB) {
 
 	users := app.Group("/users")
 	users.Post("/register", usersHandler.Register)
+	users.Post("/login", usersHandler.Login)
 }

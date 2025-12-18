@@ -4,12 +4,14 @@ import (
 	"errors"
 	Entities "headliner-be/entites"
 	UsersModels "headliner-be/model/users"
+	"headliner-be/utils"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
 type UsersUsecase interface {
 	Register(*UsersModels.RegisterInput) (string, error)
+	Login(*UsersModels.LoginInput) (string, error)
 }
 
 type UsersService struct {
@@ -45,4 +47,22 @@ func (service *UsersService) Register(users *UsersModels.RegisterInput) (string,
 		return "Failed to register user", err
 	}
 	return "User registered successfully", nil
+}
+
+func (service *UsersService) Login(user *UsersModels.LoginInput) (string, error) {
+	existingUser, err := service.usersRepo.GetUserByEmail(user.Email)
+	if err != nil {
+		return "Internal server error", err
+	}
+	if existingUser == nil {
+		return "User not found", errors.New("User not found")
+	}
+	if err := bcrypt.CompareHashAndPassword([]byte(existingUser.Password), []byte(user.Password)); err != nil {
+		return "Invalid password", err
+	}
+	token, err := utils.CreateToken(existingUser.ID, existingUser.Email, existingUser.Username)
+	if err != nil {
+		return "Failed to create token", err
+	}
+	return token, nil
 }
