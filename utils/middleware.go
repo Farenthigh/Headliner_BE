@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"headliner-be/config"
 
 	"github.com/gofiber/fiber/v3"
@@ -24,6 +25,6 @@ func IsExist(c fiber.Ctx) error {
 	}
 	c.Locals("userID", claim["id"])
 	c.Locals("email", claim["email"])
-	c.Locals("username", claim["username"])
+	fmt.Println("User ID:", claim["id"], "Email:", claim["email"])
 	return c.Next()
 }

@@ -34,3 +34,28 @@ func (g *UsersGorm) GetUserByEmail(email string) (*Entities.Users, error) {
 	}
 	return &user, nil
 }
+
+func (g *UsersGorm) CreateCharacter(Users *Entities.Users) error {
+	if err := g.db.Model(&Entities.Users{}).Where("id = ?", Users.ID).Updates(map[string]interface{}{
+		"username":  Users.Username,
+		"character": Users.Character,
+	}).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (g *UsersGorm) GetUserByUsername(username string) (*Entities.Users, error) {
+	var user Entities.Users
+	if err := g.db.Where("username = ?", username).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+func (g *UsersGorm) GetUserByID(userID uint) (*Entities.Users, error) {
+	var user Entities.Users
+	if err := g.db.Where("id = ?", userID).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}

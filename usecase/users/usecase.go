@@ -7,11 +7,14 @@ import (
 	"headliner-be/utils"
 
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 type UsersUsecase interface {
 	Register(*UsersModels.RegisterInput) (string, error)
 	Login(*UsersModels.LoginInput) (string, error)
+	CreateCharacter(uint, *UsersModels.CreateCharacterInput) (string, error)
+	GetUserData(uint) (*Entities.Users, error)
 }
 
 type UsersService struct {
@@ -38,10 +41,8 @@ func (service *UsersService) Register(users *UsersModels.RegisterInput) (string,
 		return "Failed to hash password", err
 	}
 	var EntitiesUsers = &Entities.Users{
-		Username:  users.Username,
-		Email:     users.Email,
-		Password:  HashPassword,
-		Character: users.Character,
+		Email:    users.Email,
+		Password: HashPassword,
 	}
 	if err := service.usersRepo.Register(EntitiesUsers); err != nil {
 		return "Failed to register user", err
@@ -49,15 +50,15 @@ func (service *UsersService) Register(users *UsersModels.RegisterInput) (string,
 	return "User registered successfully", nil
 }
 
-func (service *UsersService) Login(user *UsersModels.LoginInput) (string, error) {
-	existingUser, err := service.usersRepo.GetUserByEmail(user.Email)
+func (service *UsersService) Login(users *UsersModels.LoginInput) (string, error) {
+	existingUser, err := service.usersRepo.GetUserByEmail(users.Email)
 	if err != nil {
 		return "Internal server error", err
 	}
 	if existingUser == nil {
 		return "User not found", errors.New("User not found")
 	}
-	if err := bcrypt.CompareHashAndPassword([]byte(existingUser.Password), []byte(user.Password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(existingUser.Password), []byte(users.Password)); err != nil {
 		return "Invalid password", err
 	}
 	token, err := utils.CreateToken(existingUser.ID, existingUser.Email, existingUser.Username)
@@ -65,4 +66,31 @@ func (service *UsersService) Login(user *UsersModels.LoginInput) (string, error)
 		return "Failed to create token", err
 	}
 	return token, nil
+}
+
+func (service *UsersService) CreateCharacter(userID uint, users *UsersModels.CreateCharacterInput) (string, error) {
+	var EntitiesUsers = &Entities.Users{
+		ID:        userID,
+		Username:  users.Username,
+		Character: users.Character,
+	}
+	user , err := service.usersRepo.GetUserByUsername(users.Username)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return "Internal server error", err
+	}
+	if user != nil {
+		return "Username already exists", errors.New("Username already exists")
+	}
+	if err := service.usersRepo.CreateCharacter(EntitiesUsers); err != nil {
+		return "Failed to create character", err
+	}
+	return "Character created successfully", nil
+}
+
+func (service *UsersService) GetUserData(userID uint) (*Entities.Users, error) {
+	user, err := service.usersRepo.GetUserByID(userID)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }
