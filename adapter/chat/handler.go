@@ -24,6 +24,12 @@ func (h *ChatHandler) Chat(c fiber.Ctx) error {
         })
     }
 
+	if req.PlayerID == "" || req.Message == "" {
+        return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+            "error": "player_id and message are required",
+        })
+    }
+
     res, err := h.usecase.AskAI(req)
     if err != nil {
         return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
