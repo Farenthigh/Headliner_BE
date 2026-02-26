@@ -28,6 +28,8 @@ func main() {
 
 	routers.InitChatRoute(app)
 
+	routers.InitAchivementRoute(app, db)
+
 	app.Listen(fmt.Sprintf(":%s", config.Port))
 
 }
