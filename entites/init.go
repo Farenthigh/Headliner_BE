@@ -6,5 +6,5 @@ import (
 )
 
 func Init(db *gorm.DB, app *fiber.App) {
-	db.AutoMigrate(&Users{}, &Achivement{})
+	db.AutoMigrate(&Users{}, &Achievement{})
 }

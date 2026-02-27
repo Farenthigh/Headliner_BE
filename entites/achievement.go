@@ -4,7 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Achivement struct {
+type Achievement struct {
 	gorm.Model
 	Name        string `gorm:"not null" json:"name"`
 	Description string `gorm:"not null" json:"description"`

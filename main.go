@@ -28,7 +28,7 @@ func main() {
 
 	routers.InitChatRoute(app)
 
-	routers.InitAchivementRoute(app, db)
+	routers.InitAchievementRoute(app, db)
 
 	app.Listen(fmt.Sprintf(":%s", config.Port))
 
