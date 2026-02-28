@@ -39,3 +39,21 @@ func (g *AchievementGorm) GetAchievementByID(achievementID uint) (*Entities.Achi
 	}
 	return &achievement, nil
 }
+
+func (g *AchievementGorm) SaveUserAchievement(userAch *Entities.UserAchievement) error {
+	if err := g.db.FirstOrCreate(userAch, Entities.UserAchievement{
+		UserID: userAch.UserID, 
+		AchievementID: userAch.AchievementID,
+	}).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (g *AchievementGorm) GetUserAchievements(userID uint) ([]*Entities.UserAchievement, error) {
+	var userAchievements []*Entities.UserAchievement
+	if err := g.db.Preload("Achievement").Where("user_id = ?", userID).Find(&userAchievements).Error; err != nil {
+		return nil, err
+	}
+	return userAchievements, nil
+}

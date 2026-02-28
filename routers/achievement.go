@@ -17,4 +17,6 @@ func InitAchievementRoute(app *fiber.App, db *gorm.DB) {
 	achievements.Post("/", achievementHandler.CreateAchievement)
 	achievements.Get("/", achievementHandler.GetAllAchievements)
 	achievements.Get("/:id", achievementHandler.GetAchievementByID)
+	achievements.Post("/unlock", achievementHandler.UnlockAchievement)
+	achievements.Get("/user/:userId", achievementHandler.GetUserAchievements)
 }
