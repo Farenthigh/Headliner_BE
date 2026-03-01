@@ -25,7 +25,13 @@ func main() {
 	Entities.Init(db, app)
 
 	routers.InitUsersRoute(app, db)
-	routers.InitTaxGameScoreRoute(app, db)
+
+  routers.InitTaxGameScoreRoute(app, db)
+
+	routers.InitChatRoute(app)
+
+	routers.InitAchievementRoute(app, db)
+
 	app.Listen(fmt.Sprintf(":%s", config.Port))
 
 }
