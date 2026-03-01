@@ -25,6 +25,9 @@ func main() {
 	Entities.Init(db, app)
 
 	routers.InitUsersRoute(app, db)
+
+	routers.InitChatRoute(app)
+
 	app.Listen(fmt.Sprintf(":%s", config.Port))
 
 }
