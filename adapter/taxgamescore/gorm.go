@@ -16,14 +16,14 @@ func NewTaxGameScoreGorm(db *gorm.DB) *TaxGameScoreGorm {
 	}
 }
 
-func (g *TaxGameScoreGorm) createTaxGameScore(score *Entities.TaxGameScore) error {
+func (g *TaxGameScoreGorm) CreateTaxGameScore(score *Entities.TaxGameScore) error {
 	if err := g.db.Create(&score).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (g *TaxGameScoreGorm) getAllTaxGameScores() ([]*Entities.TaxGameScore, error) {
+func (g *TaxGameScoreGorm) GetAllTaxGameScores() ([]*Entities.TaxGameScore, error) {
 	var scores []*Entities.TaxGameScore
 	if err := g.db.Find(&scores).Error; err != nil {
 		return nil, err
@@ -31,7 +31,7 @@ func (g *TaxGameScoreGorm) getAllTaxGameScores() ([]*Entities.TaxGameScore, erro
 	return scores, nil
 }
 
-func (g *TaxGameScoreGorm) getTaxGameScoreByUserID(userID uint) (*Entities.TaxGameScore, error) {
+func (g *TaxGameScoreGorm) GetTaxGameScoreByUserID(userID uint) (*Entities.TaxGameScore, error) {
 	var score Entities.TaxGameScore
 	if err := g.db.Where("user_id = ?", userID).First(&score).Error; err != nil {
 		return nil, err
@@ -39,8 +39,8 @@ func (g *TaxGameScoreGorm) getTaxGameScoreByUserID(userID uint) (*Entities.TaxGa
 	return &score, nil
 }
 
-func (g *TaxGameScoreGorm) updateTaxGameScore(score *Entities.TaxGameScore) error {
-	if err := g.db.Save(&score).Error; err != nil {
+func (g *TaxGameScoreGorm) UpdateTaxGameScore(score *Entities.TaxGameScore) error {
+	if err := g.db.Model(&Entities.TaxGameScore{}).Where("id = ?", score.ID).Updates(score).Error; err != nil {
 		return err
 	}
 	return nil

@@ -1,12 +1,15 @@
 package TaxGameScoreUsecase
 
-import Entities "headliner-be/entites"
+import (
+	Entities "headliner-be/entites"
+	TaxGameScoreModels "headliner-be/model/taxgamescore"
+)
 
 type TaxGameScoreUsecase interface {
-	createTaxGameScore(Entities.TaxGameScore) error
-	getAllTaxGameScores() ([]*Entities.TaxGameScore, error)
-	getTaxGameScoreByUserID(userID uint) (*Entities.TaxGameScore, error)
-	updateTaxGameScore(score *Entities.TaxGameScore) error
+	CreateTaxGameScore(*TaxGameScoreModels.CreateTaxGameScoreInput) error
+	GetAllTaxGameScores() ([]*Entities.TaxGameScore, error)
+	GetTaxGameScoreByUserID(userID uint) (*Entities.TaxGameScore, error)
+	UpdateTaxGameScore(score *TaxGameScoreModels.UpdateTaxGameScoreInput) error
 }
 
 type TaxGameScoreService struct {
@@ -19,18 +22,26 @@ func NewTaxGameScoreService(taxgamescorerepo TaxGameScoreRepository) TaxGameScor
 	}
 }
 
-func (service *TaxGameScoreService) createTaxGameScore(score Entities.TaxGameScore) error {
-	return service.taxgamescorerepo.createTaxGameScore(score)
+func (service *TaxGameScoreService) CreateTaxGameScore(input *TaxGameScoreModels.CreateTaxGameScoreInput) error {
+
+	return service.taxgamescorerepo.CreateTaxGameScore(&Entities.TaxGameScore{
+		UserID: input.UserID,
+		Score:  input.Score,
+	})
 }
 
-func (service *TaxGameScoreService) getAllTaxGameScores() ([]*Entities.TaxGameScore, error) {
-	return service.taxgamescorerepo.getAllTaxGameScores()
+func (service *TaxGameScoreService) GetAllTaxGameScores() ([]*Entities.TaxGameScore, error) {
+	return service.taxgamescorerepo.GetAllTaxGameScores()
 }
 
-func (service *TaxGameScoreService) getTaxGameScoreByUserID(userID uint) (*Entities.TaxGameScore, error) {
-	return service.taxgamescorerepo.getTaxGameScoreByUserID(userID)
+func (service *TaxGameScoreService) GetTaxGameScoreByUserID(userID uint) (*Entities.TaxGameScore, error) {
+	return service.taxgamescorerepo.GetTaxGameScoreByUserID(userID)
 }
 
-func (service *TaxGameScoreService) updateTaxGameScore(score *Entities.TaxGameScore) error {
-	return service.taxgamescorerepo.updateTaxGameScore(score)
+func (service *TaxGameScoreService) UpdateTaxGameScore(score *TaxGameScoreModels.UpdateTaxGameScoreInput) error {
+	 scoreEntity := Entities.TaxGameScore{}
+	 scoreEntity.ID = score.Id
+	 scoreEntity.UserID = score.UserID
+	 scoreEntity.Score = score.Score
+	return service.taxgamescorerepo.UpdateTaxGameScore(&scoreEntity)
 }

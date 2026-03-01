@@ -1,10 +1,12 @@
 package TaxGameScoreUsecase
 
-import Entities "headliner-be/entites"
+import (
+	Entities "headliner-be/entites"
+)
 
 type TaxGameScoreRepository interface {
-	createTaxGameScore(Entities.TaxGameScore) error
-	getAllTaxGameScores() ([]*Entities.TaxGameScore, error)
-	getTaxGameScoreByUserID(userID uint) (*Entities.TaxGameScore, error)
-	updateTaxGameScore(score *Entities.TaxGameScore) error
+	CreateTaxGameScore(*Entities.TaxGameScore) error
+	GetAllTaxGameScores() ([]*Entities.TaxGameScore, error)
+	GetTaxGameScoreByUserID(userID uint) (*Entities.TaxGameScore, error)
+	UpdateTaxGameScore(score *Entities.TaxGameScore) error
 }
