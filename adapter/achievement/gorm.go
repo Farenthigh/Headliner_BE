@@ -1,7 +1,7 @@
 package AchievementAdapter
 
 import (
-	Entities "headliner-be/entites"
+	Entities "headliner-be/entities"
 	AchievementUsecase "headliner-be/usecase/achievement"
 
 	"gorm.io/gorm"

@@ -1,6 +1,8 @@
 package AchievementUsecase
 
-import Entities "headliner-be/entites"
+import Entities "headliner-be/entities"
+
+
 
 type AchievementRepository interface {
 	CreateAchievement(*Entities.Achievement) error

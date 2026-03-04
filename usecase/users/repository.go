@@ -1,6 +1,8 @@
 package UsersUsecase
 
-import Entities "headliner-be/entites"
+import Entities "headliner-be/entities"
+
+
 
 type UsersRepository interface {
 	Register(*Entities.Users) error

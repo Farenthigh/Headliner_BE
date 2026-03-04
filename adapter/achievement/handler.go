@@ -2,7 +2,7 @@ package AchievementAdapter
 
 import (
 	"fmt"
-	Entities "headliner-be/entites"
+	Entities "headliner-be/entities"
 	AchievementUsecase "headliner-be/usecase/achievement"
 	"headliner-be/utils"
 
