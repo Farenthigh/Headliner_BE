@@ -1,4 +1,4 @@
-package Entities
+package entities
 
 import (
 	"github.com/gofiber/fiber/v3"
