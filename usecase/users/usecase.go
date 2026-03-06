@@ -2,7 +2,7 @@ package UsersUsecase
 
 import (
 	"errors"
-	Entities "headliner-be/entites"
+	Entities "headliner-be/entities"
 	UsersModels "headliner-be/model/users"
 	"headliner-be/utils"
 
@@ -74,7 +74,7 @@ func (service *UsersService) CreateCharacter(userID uint, users *UsersModels.Cre
 		Username:  users.Username,
 		Character: users.Character,
 	}
-	user , err := service.usersRepo.GetUserByUsername(users.Username)
+	user, err := service.usersRepo.GetUserByUsername(users.Username)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return "Internal server error", err
 	}

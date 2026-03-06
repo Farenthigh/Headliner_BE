@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"headliner-be/config"
-	Entities "headliner-be/entites"
+	Entities "headliner-be/entities"
 	"headliner-be/routers"
 
 	"github.com/gofiber/fiber/v3"

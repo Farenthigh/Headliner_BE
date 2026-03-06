@@ -3,7 +3,7 @@ package UsersAdapter
 import (
 	"errors"
 	"fmt"
-	Entities "headliner-be/entites"
+	Entities "headliner-be/entities"
 	UsersUsecase "headliner-be/usecase/users"
 
 	"gorm.io/gorm"
