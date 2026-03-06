@@ -2,7 +2,7 @@ package leaderboard
 
 import (
 	Entities "headliner-be/entities"
-	leaderboard_usecase "headliner-be/usecase/leaderboard" // ← import usecase แทน
+	leaderboard_usecase "headliner-be/usecase/leaderboard" 
 
 	"gorm.io/gorm"
 )

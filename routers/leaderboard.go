@@ -1,7 +1,7 @@
 package routers
 
 import (
-    LeaderboardAdapter "headliner-be/adapter/leaderboard" // สมมติชื่อโฟลเดอร์
+    LeaderboardAdapter "headliner-be/adapter/leaderboard" 
     LeaderboardUsecase "headliner-be/usecase/leaderboard"
     "github.com/gofiber/fiber/v3"
     "gorm.io/gorm"

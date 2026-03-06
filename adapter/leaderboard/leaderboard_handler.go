@@ -1,13 +1,12 @@
 package leaderboard
 
 import (
-    leaderboard_usecase "headliner-be/usecase/leaderboard"  // ← import usecase
+    leaderboard_usecase "headliner-be/usecase/leaderboard"  
     "github.com/gofiber/fiber/v3"
-    // ลบ import Entities ออก ไม่ได้ใช้
 )
 
 type LeaderboardAdapter struct {
-    usecase leaderboard_usecase.LeaderboardUsecase  // ← ใช้ type จาก usecase package
+    usecase leaderboard_usecase.LeaderboardUsecase  
 }
 
 func NewLeaderboardAdapter(usecase leaderboard_usecase.LeaderboardUsecase) *LeaderboardAdapter {

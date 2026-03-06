@@ -1,10 +1,10 @@
 package leaderboard_usecase
 
 import (
-	Entities "headliner-be/entities" // ← เอา import adapter ออก
+	Entities "headliner-be/entities" 
 )
 
-// ย้าย Repository interface มาไว้ที่นี่
+
 type LeaderboardRepository interface {
 	GetAllLeaderboard() ([]Entities.LeaderboardEntry, error)
 }
@@ -14,7 +14,7 @@ type LeaderboardUsecase interface {
 }
 
 type leaderboardService struct {
-	repo LeaderboardRepository // ← ใช้ interface ที่ประกาศข้างบน
+	repo LeaderboardRepository 
 }
 
 func NewLeaderboardService(repo LeaderboardRepository) LeaderboardUsecase {
