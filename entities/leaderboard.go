@@ -1,4 +1,4 @@
-package entities
+package Entities
 
 type Leaderboard struct {
 	LeaderboardID   int `gorm:"primaryKey;column:leaderboard_id" json:"leaderboard_id"`

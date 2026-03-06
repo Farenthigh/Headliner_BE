@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"headliner-be/config"
 	Entities "headliner-be/entities"
+
 	"headliner-be/routers"
 
 	"github.com/gofiber/fiber/v3"
@@ -27,6 +28,8 @@ func main() {
 	routers.InitUsersRoute(app, db)
 
 	routers.InitChatRoute(app)
+
+	routers.InitAchievementRoute(app, db)
 
 	routers.InitLeaderboardRoute(app, db)
 

@@ -1,4 +1,4 @@
-package entities
+package Entities
 
 import (
 	"github.com/gofiber/fiber/v3"
@@ -6,5 +6,5 @@ import (
 )
 
 func Init(db *gorm.DB, app *fiber.App) {
-	db.AutoMigrate(&Users{})
+	db.AutoMigrate(&Users{}, &Achievement{}, &UserAchievement{})
 }
