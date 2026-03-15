@@ -21,6 +21,7 @@ func main() {
 	if err != nil {
 		panic("failed to connect database")
 	}
+	db.AutoMigrate(&Entities.Users{}, &Entities.StageLog{})//สร้าง table อัตโนมัติ
 	app := fiber.New()
 
 	Entities.Init(db, app)
@@ -30,6 +31,8 @@ func main() {
 	routers.InitChatRoute(app)
 
 	routers.InitAchievementRoute(app, db)
+
+	routers.InitStageRoute(app, db)
 
 	app.Listen(fmt.Sprintf(":%s", config.Port))
 
