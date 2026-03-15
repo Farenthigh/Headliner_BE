@@ -31,6 +31,8 @@ func main() {
 
 	routers.InitAchievementRoute(app, db)
 
+	routers.InitLeaderboardRoute(app, db)
+
 	app.Listen(fmt.Sprintf(":%s", config.Port))
 
 }
