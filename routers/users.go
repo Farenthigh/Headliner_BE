@@ -19,4 +19,6 @@ func InitUsersRoute(app *fiber.App, db *gorm.DB) {
 	users.Post("/login", usersHandler.Login)
 	users.Post("/createcharacter", utils.IsExist, usersHandler.CreateCharacter)
 	users.Get("/data", utils.IsExist, usersHandler.GetUserData)
+
+	users.Post("/set-chatbot-name", utils.IsExist, usersHandler.SetChatbotName)
 }

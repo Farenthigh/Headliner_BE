@@ -9,4 +9,5 @@ type Users struct {
 	Email     string `gorm:"uniqueIndex;not null" json:"email"`
 	Password  string `gorm:"not null" json:"password"`
 	Character int    `gorm:"not null" json:"character"`
+	ChatbotName string `gorm:"not null;default:''" json:"chatbot_name"`
 }

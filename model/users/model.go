@@ -10,6 +10,11 @@ type CreateCharacterInput struct {
 	Username  string `json:"username"`
 	Character int    `json:"character"`
 }
+
+type SetChatbotNameInput struct {
+	ChatbotName string `json:"chatbot_name"`
+}
+
 type LoginInput struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`

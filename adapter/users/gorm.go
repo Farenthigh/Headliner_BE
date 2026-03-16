@@ -59,3 +59,10 @@ func (g *UsersGorm) GetUserByID(userID uint) (*Entities.Users, error) {
 	}
 	return &user, nil
 }
+
+func (g *UsersGorm) SetChatbotName(userID uint, chatbotName string) error {
+	if err := g.db.Model(&Entities.Users{}).Where("id = ?", userID).Update("chatbot_name", chatbotName).Error; err != nil {
+		return err
+	}
+	return nil
+}

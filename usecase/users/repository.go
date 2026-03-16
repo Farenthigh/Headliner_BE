@@ -10,4 +10,6 @@ type UsersRepository interface {
 	CreateCharacter(*Entities.Users) error
 	GetUserByUsername(username string) (*Entities.Users, error)
 	GetUserByID(userID uint) (*Entities.Users, error)
+
+	SetChatbotName(userID uint, chatbotName string) error
 }

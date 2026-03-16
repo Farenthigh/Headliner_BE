@@ -8,7 +8,6 @@ import (
 	"headliner-be/utils"
 
 	"golang.org/x/crypto/bcrypt"
-	"gorm.io/gorm"
 )
 
 type UsersUsecase interface {
@@ -16,6 +15,8 @@ type UsersUsecase interface {
 	Login(*UsersModels.LoginInput) (string, error)
 	CreateCharacter(uint, *UsersModels.CreateCharacterInput) (string, error)
 	GetUserData(uint) (*Entities.Users, error)
+
+	SetChatbotName(uint, *UsersModels.SetChatbotNameInput) (string, error)
 }
 
 type UsersService struct {
@@ -70,19 +71,12 @@ func (service *UsersService) Login(users *UsersModels.LoginInput) (string, error
 }
 
 func (service *UsersService) CreateCharacter(userID uint, users *UsersModels.CreateCharacterInput) (string, error) {
-	var EntitiesUsers = &Entities.Users{
+	var entitiesUsers = &Entities.Users{
 		ID:        userID,
 		Username:  users.Username,
 		Character: users.Character,
 	}
-	user, err := service.usersRepo.GetUserByUsername(users.Username)
-	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		return "Internal server error", err
-	}
-	if user != nil {
-		return "Username already exists", errors.New("Username already exists")
-	}
-	if err := service.usersRepo.CreateCharacter(EntitiesUsers); err != nil {
+	if err := service.usersRepo.CreateCharacter(entitiesUsers); err != nil {
 		return "Failed to create character", err
 	}
 	return "Character created successfully", nil
@@ -94,4 +88,14 @@ func (service *UsersService) GetUserData(userID uint) (*Entities.Users, error) {
 		return nil, err
 	}
 	return user, nil
+}
+
+func (service *UsersService) SetChatbotName(userID uint, input *UsersModels.SetChatbotNameInput) (string, error) {
+	if input.ChatbotName == "" {
+		return "Chatbot name is required", errors.New("chatbot name is required")
+	}
+	if err := service.usersRepo.SetChatbotName(userID, input.ChatbotName); err != nil {
+		return "Failed to set chatbot name", err
+	}
+	return "Chatbot name set successfully", nil
 }
