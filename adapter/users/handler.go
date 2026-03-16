@@ -76,3 +76,41 @@ func (a *UsersHandler) GetUserData(c fiber.Ctx) error {
 		"character": user.Character,
 	})
 }
+func (a *UsersHandler) UpdateUsername(c fiber.Ctx) error {
+
+	var input UsersModels.UpdateUsernameInput
+
+	if err := c.Bind().Body(&input); err != nil {
+		return utils.ResponseJSON(c, fiber.StatusBadRequest, "Invalid request body", err.Error(), nil)
+	}
+
+	userID := c.Locals("userID")
+
+	message, err := a.UsersUsecase.UpdateUsername(uint(userID.(float64)), &input)
+
+	if err != nil {
+		return utils.ResponseJSON(c, fiber.StatusBadRequest, message, err.Error(), nil)
+	}
+
+	return utils.ResponseJSON(c, fiber.StatusOK, message, "", nil)
+}
+
+
+func (a *UsersHandler) UpdatePassword(c fiber.Ctx) error {
+
+	var input UsersModels.UpdatePasswordInput
+
+	if err := c.Bind().Body(&input); err != nil {
+		return utils.ResponseJSON(c, fiber.StatusBadRequest, "Invalid request body", err.Error(), nil)
+	}
+
+	userID := c.Locals("userID")
+
+	message, err := a.UsersUsecase.UpdatePassword(uint(userID.(float64)), &input)
+
+	if err != nil {
+		return utils.ResponseJSON(c, fiber.StatusBadRequest, message, err.Error(), nil)
+	}
+
+	return utils.ResponseJSON(c, fiber.StatusOK, message, "", nil)
+}

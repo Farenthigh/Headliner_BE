@@ -59,3 +59,25 @@ func (g *UsersGorm) GetUserByID(userID uint) (*Entities.Users, error) {
 	}
 	return &user, nil
 }
+func (g *UsersGorm) UpdateUsername(userID uint, username string) error {
+
+	if err := g.db.Model(&Entities.Users{}).
+		Where("id = ?", userID).
+		Update("username", username).Error; err != nil {
+
+		return err
+	}
+
+	return nil
+}
+func (g *UsersGorm) UpdatePassword(userID uint, password string) error {
+
+	if err := g.db.Model(&Entities.Users{}).
+		Where("id = ?", userID).
+		Update("password", password).Error; err != nil {
+
+		return err
+	}
+
+	return nil
+}
