@@ -112,3 +112,20 @@ func (h *StageHandler) GetUnlockStage(c fiber.Ctx) error {
         "unlocked": unlockedStages,
     })
 }
+
+func (h *StageHandler) GetStageStars(c fiber.Ctx) error {
+
+	userIDStr := c.Query("user_id")
+
+	userID64, err := strconv.ParseUint(userIDStr, 10, 64)
+	if err != nil {
+		return c.Status(400).JSON("invalid user_id")
+	}
+
+	stages, err := h.usecase.GetStageStars(uint(userID64))
+	if err != nil {
+		return c.Status(500).JSON(err.Error())
+	}
+
+	return c.JSON(stages)
+}

@@ -72,3 +72,14 @@ func (u *StageUsecase) GetUnlockStage(userID uint) (uint, []uint, error) {
 
     return maxStage, unlocked, nil
 }
+
+func (u *StageUsecase) GetStageStars(userID uint) ([]Entities.StageLog, error) {
+
+	var logs []Entities.StageLog
+
+	err := u.db.
+		Where("user_id = ?", userID).
+		Find(&logs).Error
+
+	return logs, err
+}

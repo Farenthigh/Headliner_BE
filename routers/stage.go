@@ -20,4 +20,5 @@ func InitStageRoute(app *fiber.App, db *gorm.DB) {
 	stageGroup.Get("/leaderboard/me", stageHandler.GetMyRank)
 	stageGroup.Get("/progress", stageHandler.GetUserStages)
 	stageGroup.Get("/unlock", stageHandler.GetUnlockStage)
+	stageGroup.Get("/stars", stageHandler.GetStageStars)
 }
