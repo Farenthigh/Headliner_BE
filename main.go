@@ -33,6 +33,7 @@ func main() {
 	routers.InitAchievementRoute(app, db)
 
 	routers.InitStageRoute(app, db)
+	routers.InitSavingStageRoute(app, db)
 	routers.InitLeaderboardRoute(app, db)
 
 	app.Listen(fmt.Sprintf(":%s", config.Port))
