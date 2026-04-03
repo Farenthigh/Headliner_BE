@@ -81,3 +81,21 @@ func (g *UsersGorm) UpdatePassword(userID uint, password string) error {
 
 	return nil
 }
+
+func (h *UserHandler) UpdateChatbotName(c *fiber.Ctx) error {
+    var req model.UpdateChatbotRequest
+
+    if err := c.BodyParser(&req); err != nil {
+        return c.Status(400).JSON(fiber.Map{"error": "Bad Request"})
+    }
+
+    err := h.userUseCase.UpdateChatbotName(req.UserID, req.ChatbotName)
+    if err != nil {
+        return c.Status(500).JSON(fiber.Map{"error": "Database Error"})
+    }
+
+    return c.Status(200).JSON(fiber.Map{
+        "message": "Success",
+        "chatbot_name": req.ChatbotName,
+    })
+}

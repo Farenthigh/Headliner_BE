@@ -149,3 +149,11 @@ func (service *UsersService) UpdatePassword(userID uint, input *UsersModels.Upda
 
 	return "Password updated successfully", nil
 }
+
+func (u *userUseCase) UpdateChatbotName(userID uint, newName string) error {
+    result := u.db.Model(&entities.User{}).Where("id = ?", userID).Update("chatbot_name", newName)
+    if result.Error != nil {
+        return result.Error
+    }
+    return nil
+}

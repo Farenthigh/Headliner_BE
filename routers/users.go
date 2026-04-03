@@ -22,4 +22,5 @@ func InitUsersRoute(app *fiber.App, db *gorm.DB) {
 
 	users.Put("/update-username", utils.IsExist, usersHandler.UpdateUsername)
 	users.Put("/update-password", utils.IsExist, usersHandler.UpdatePassword)
+	users.Post("/update-chatbot", utils.IsExist, usersHandler.UpdateChatbotName)
 }

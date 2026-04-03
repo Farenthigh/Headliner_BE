@@ -22,3 +22,8 @@ type UpdatePasswordInput struct {
 	CurrentPassword string `json:"currentPassword"`
 	NewPassword     string `json:"newPassword"`
 }
+
+type UpdateChatbotRequest struct {
+    UserID      uint   `json:"user_id"`
+    ChatbotName string `json:"chatbot_name"`
+}
