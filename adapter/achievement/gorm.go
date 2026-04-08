@@ -26,7 +26,7 @@ func (g *AchievementGorm) CreateAchievement(achievement *Entities.Achievement) e
 
 func (g *AchievementGorm) GetAllAchievements() ([]*Entities.Achievement, error) {
 	var achievements []*Entities.Achievement
-	if err := g.db.Find(achievements).Error; err != nil {
+	if err := g.db.Find(&achievements).Error; err != nil {
 		return nil, err
 	}
 	return achievements, nil

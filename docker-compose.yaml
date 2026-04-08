@@ -31,3 +31,4 @@ services:
       - psql_volume_bp:/var/lib/postgresql/data
 volumes:
   psql_volume_bp:
+  
