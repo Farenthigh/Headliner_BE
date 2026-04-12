@@ -16,6 +16,10 @@ type UsersUsecase interface {
 	Login(*UsersModels.LoginInput) (string, error)
 	CreateCharacter(uint, *UsersModels.CreateCharacterInput) (string, error)
 	GetUserData(uint) (*Entities.Users, error)
+	UpdateUsername(uint, *UsersModels.UpdateUsernameInput) (string, error)
+	UpdatePassword(uint, *UsersModels.UpdatePasswordInput) (string, error)
+	UpdateChatbotName(uint, string) error
+
 }
 
 type UsersService struct {
@@ -37,13 +41,13 @@ func (service *UsersService) Register(users *UsersModels.RegisterInput) (string,
 	if users.Password != users.ConfirmPassword {
 		return "Password and Confirm Password must be the same", errors.New("Password and Confirm Password must be the same")
 	}
-	HashPassword, err := HashPassword(users.Password)
+	hashPassword, err := HashPassword(users.Password)
 	if err != nil {
 		return "Failed to hash password", err
 	}
 	var EntitiesUsers = &Entities.Users{
 		Email:    users.Email,
-		Password: HashPassword,
+		Password: hashPassword,
 	}
 	if err := service.usersRepo.Register(EntitiesUsers); err != nil {
 		return "Failed to register user", err
@@ -94,4 +98,63 @@ func (service *UsersService) GetUserData(userID uint) (*Entities.Users, error) {
 		return nil, err
 	}
 	return user, nil
+}
+func (service *UsersService) UpdateUsername(userID uint, input *UsersModels.UpdateUsernameInput) (string, error) {
+
+	if input.Username == "" {
+		return "Username cannot be empty", errors.New("Username cannot be empty")
+	}
+
+	user, err := service.usersRepo.GetUserByUsername(input.Username)
+
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return "Internal server error", err
+	}
+
+	if user != nil {
+		return "Username already exists", errors.New("Username already exists")
+	}
+
+	err = service.usersRepo.UpdateUsername(userID, input.Username)
+
+	if err != nil {
+		return "Failed to update username", err
+	}
+
+	return "Username updated successfully", nil
+}
+
+func (service *UsersService) UpdatePassword(userID uint, input *UsersModels.UpdatePasswordInput) (string, error) {
+
+	user, err := service.usersRepo.GetUserByID(userID)
+
+	if err != nil {
+		return "User not found", err
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.CurrentPassword)); err != nil {
+		return "Incorrect current password", err
+	}
+
+	hashedPassword, err := HashPassword(input.NewPassword)
+
+	if err != nil {
+		return "Failed to hash password", err
+	}
+
+	err = service.usersRepo.UpdatePassword(userID, hashedPassword)
+
+	if err != nil {
+		return "Failed to update password", err
+	}
+
+	return "Password updated successfully", nil
+}
+
+func (service *UsersService) UpdateChatbotName(userID uint, newName string) error {
+    err := service.usersRepo.UpdateChatbotName(userID, newName)
+    if err != nil {
+        return err
+    }
+    return nil
 }

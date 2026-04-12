@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"headliner-be/config"
+	"strings"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
@@ -13,9 +14,16 @@ func IsExist(c fiber.Ctx) error {
 	if auth == "" {
 		return fiber.NewError(fiber.StatusUnauthorized, "unauthorized")
 	}
-	token, err := jwt.ParseWithClaims(auth, jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(config.Jwt_secret), nil
-	})
+
+	parts := strings.Split(auth, " ")
+    if len(parts) != 2 || parts[0] != "Bearer" {
+        return fiber.NewError(fiber.StatusUnauthorized, "invalid token format")
+    }
+    tokenString := parts[1]
+	
+	token, err := jwt.ParseWithClaims(tokenString, jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
+        return []byte(config.Jwt_secret), nil
+    })
 	if err != nil {
 		return fiber.NewError(fiber.StatusUnauthorized, "unauthorized")
 	}

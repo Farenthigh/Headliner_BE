@@ -19,4 +19,8 @@ func InitUsersRoute(app *fiber.App, db *gorm.DB) {
 	users.Post("/login", usersHandler.Login)
 	users.Post("/createcharacter", utils.IsExist, usersHandler.CreateCharacter)
 	users.Get("/data", utils.IsExist, usersHandler.GetUserData)
+
+	users.Put("/update-username", utils.IsExist, usersHandler.UpdateUsername)
+	users.Put("/update-password", utils.IsExist, usersHandler.UpdatePassword)
+	users.Post("/update-chatbot", utils.IsExist, usersHandler.UpdateChatbotName)
 }
