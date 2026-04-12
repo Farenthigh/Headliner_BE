@@ -18,6 +18,7 @@ type UsersUsecase interface {
 	GetUserData(uint) (*Entities.Users, error)
 	UpdateUsername(uint, *UsersModels.UpdateUsernameInput) (string, error)
 	UpdatePassword(uint, *UsersModels.UpdatePasswordInput) (string, error)
+	UpdateChatbotName(uint, string) error
 
 }
 
@@ -148,4 +149,12 @@ func (service *UsersService) UpdatePassword(userID uint, input *UsersModels.Upda
 	}
 
 	return "Password updated successfully", nil
+}
+
+func (service *UsersService) UpdateChatbotName(userID uint, newName string) error {
+    err := service.usersRepo.UpdateChatbotName(userID, newName)
+    if err != nil {
+        return err
+    }
+    return nil
 }
