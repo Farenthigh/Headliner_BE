@@ -18,8 +18,12 @@ func NewLeaderboardGorm(db *gorm.DB) leaderboard_usecase.LeaderboardRepository {
 func (r *LeaderboardGorm) GetAllLeaderboard() ([]Entities.LeaderboardEntry, error) {
 	var results []Entities.LeaderboardEntry
 	err := r.db.Table("leaderboard").
-		Select("users.username, leaderboard.saving_game_score, leaderboard.tax_game_score").
+		Select("users.username, leaderboard.saving_game_score, leaderboard.tax_game_score, leaderboard.saving_game_time, leaderboard.tax_game_time").
 		Joins("join users on users.id = leaderboard.user_id").
 		Scan(&results).Error
 	return results, err
+}
+
+func (r *LeaderboardGorm) SaveScore(data Entities.Leaderboard) error {
+    return r.db.Save(&data).Error 
 }

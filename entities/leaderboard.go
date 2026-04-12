@@ -5,10 +5,14 @@ type Leaderboard struct {
 	UserID          int `gorm:"column:user_id" json:"user_id"`
 	SavingGameScore int `gorm:"column:saving_game_score;default:0" json:"saving_game_score"`
 	TaxGameScore    int `gorm:"column:tax_game_score;default:0" json:"tax_game_score"`
+	SavingGameTime  int `gorm:"column:saving_game_time;default:0" json:"saving_game_time"` // เพิ่มบรรทัดนี้
+	TaxGameTime     int `gorm:"column:tax_game_time;default:0" json:"tax_game_time"`       // เพิ่มบรรทัดนี้
 }
 
 type LeaderboardEntry struct {
-    Username        string `json:"username"`
-    SavingGameScore int    `json:"saving_game_score"`
-    TaxGameScore    int    `json:"tax_game_score"`
+	Username        string `json:"username"`
+	SavingGameScore int    `json:"saving_game_score"`
+	TaxGameScore    int    `json:"tax_game_score"`
+	SavingGameTime  int    `json:"saving_game_time"` // เพิ่มบรรทัดนี้
+	TaxGameTime     int    `json:"tax_game_time"`    // เพิ่มบรรทัดนี้
 }
