@@ -1,9 +1,8 @@
 package leaderboard_usecase
 
 import (
-	Entities "headliner-be/entities" 
+	Entities "headliner-be/entities"
 )
-
 
 type LeaderboardRepository interface {
 	GetAllLeaderboard() ([]Entities.LeaderboardEntry, error)
@@ -16,7 +15,7 @@ type LeaderboardUsecase interface {
 }
 
 type leaderboardService struct {
-	repo LeaderboardRepository 
+	repo LeaderboardRepository
 }
 
 func NewLeaderboardService(repo LeaderboardRepository) LeaderboardUsecase {
@@ -28,5 +27,5 @@ func (s *leaderboardService) GetLeaderboard() ([]Entities.LeaderboardEntry, erro
 }
 
 func (s *leaderboardService) SaveScore(data Entities.Leaderboard) error {
-    return s.repo.SaveScore(data)
+	return s.repo.SaveScore(data)
 }

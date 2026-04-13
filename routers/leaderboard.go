@@ -14,4 +14,5 @@ func InitLeaderboardRoute(app *fiber.App, db *gorm.DB) {
 
     lb := app.Group("/leaderboard")
     lb.Get("/", lbHandler.GetLeaderboard) 
+    lb.Post("/", lbHandler.SaveScore)
 }

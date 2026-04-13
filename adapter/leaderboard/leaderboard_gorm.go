@@ -18,12 +18,39 @@ func NewLeaderboardGorm(db *gorm.DB) leaderboard_usecase.LeaderboardRepository {
 func (r *LeaderboardGorm) GetAllLeaderboard() ([]Entities.LeaderboardEntry, error) {
 	var results []Entities.LeaderboardEntry
 	err := r.db.Table("leaderboard").
-		Select("users.username, leaderboard.saving_game_score, leaderboard.tax_game_score, leaderboard.saving_game_time, leaderboard.tax_game_time").
+		Select("users.username, leaderboard.saving_game_score, leaderboard.tax_game_score, leaderboard.updated_at").
 		Joins("join users on users.id = leaderboard.user_id").
 		Scan(&results).Error
 	return results, err
 }
 
+
 func (r *LeaderboardGorm) SaveScore(data Entities.Leaderboard) error {
-    return r.db.Save(&data).Error 
+	var existingRecord Entities.Leaderboard
+
+	result := r.db.Where("user_id = ?", data.UserID).First(&existingRecord)
+
+	if result.Error == nil {
+		isUpdated := false
+
+		if data.SavingGameScore > existingRecord.SavingGameScore {
+			existingRecord.SavingGameScore = data.SavingGameScore
+			existingRecord.SavingGameTime = data.SavingGameTime
+			isUpdated = true
+		}
+
+		if data.TaxGameScore > existingRecord.TaxGameScore {
+			existingRecord.TaxGameScore = data.TaxGameScore
+			existingRecord.TaxGameTime = data.TaxGameTime
+			isUpdated = true
+		}
+
+		if isUpdated {
+			return r.db.Save(&existingRecord).Error
+		}
+		
+		return nil 
+	}
+
+	return r.db.Create(&data).Error
 }

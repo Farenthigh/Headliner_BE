@@ -25,17 +25,19 @@ func (h *LeaderboardAdapter) GetLeaderboard(c fiber.Ctx) error {
     })
 }
 
-func (h *LeaderboardAdapter) SaveScoreHandler(c fiber.Ctx) error {
-    var req Entities.Leaderboard
-    // แปลง JSON จาก Unity ให้เป็น Struct
-    if err := c.Bind().JSON(&req); err != nil {
-        return c.Status(400).JSON(fiber.Map{"error": "Invalid input"})
-    }
-    
-    // // บันทึกลง DB
-    if err := h.usecase.SaveScore(req); err != nil {
-         return c.Status(500).JSON(fiber.Map{"error": err.Error()})
-    }
-    
-    return c.JSON(fiber.Map{"message": "Score saved successfully"})
+func (h *LeaderboardAdapter) SaveScore(c fiber.Ctx) error {
+	var input Entities.Leaderboard
+
+	if err := c.Bind().Body(&input); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request body"})
+	}
+
+	err := h.usecase.SaveScore(input)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.JSON(fiber.Map{
+		"message": "Score saved successfully",
+	})
 }
