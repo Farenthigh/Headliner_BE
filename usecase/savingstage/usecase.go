@@ -54,7 +54,7 @@ func (u *SavingStageUsecase) GetUnlockStage(userID uint) (uint, []uint, error) {
     var maxStage uint
 
     err := u.db.
-        Table("stage_logs").
+        Table("saving_stage_logs").
         Select("COALESCE(MAX(stage), 0)").
         Where("user_id = ?", userID).
         Scan(&maxStage).Error

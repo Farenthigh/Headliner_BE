@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"headliner-be/config"
 	Entities "headliner-be/entities"
+	"headliner-be/utils"
 
 	"headliner-be/routers"
 
@@ -23,6 +24,7 @@ func main() {
 	}
 	db.AutoMigrate(&Entities.Users{}, &Entities.StageLog{}, &Entities.Leaderboard{})//สร้าง table อัตโนมัติ
 	app := fiber.New()
+	utils.InitFirebase()
 
 	Entities.Init(db, app)
 

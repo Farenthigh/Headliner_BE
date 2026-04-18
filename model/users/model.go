@@ -27,3 +27,9 @@ type UpdateChatbotRequest struct {
     UserID      uint   `json:"user_id"`
     ChatbotName string `json:"chatbot_name"`
 }
+type LoginWithFirebaseGoogleInput struct {
+	Token string `json:"Token"`
+}
+type RegisterWithFirebaseGoogleInput struct {
+    Username string `json:"username"`
+}
