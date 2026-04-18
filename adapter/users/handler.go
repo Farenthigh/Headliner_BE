@@ -6,6 +6,8 @@ import (
     "headliner-be/utils"
 
     "github.com/gofiber/fiber/v3"
+	fbauth "firebase.google.com/go/v4/auth"
+	"github.com/gofiber/fiber/v3"
 )
 
 type UsersHandler struct {
@@ -130,5 +132,50 @@ func (a *UsersHandler) UpdateChatbotName(c fiber.Ctx) error {
 
     return utils.ResponseJSON(c, fiber.StatusOK, "Chatbot name updated successfully", "", fiber.Map{
         "chatbot_name": input.ChatbotName,
+	return utils.ResponseJSON(c, fiber.StatusOK, message, "", nil)
+}
+func (a *UsersHandler) LoginWithGoogle(c fiber.Ctx) error {
+    // 1. ดึงข้อมูลจาก Locals (ต้องสะกด Key ให้ตรงกับใน Middleware)
+    rawToken := c.Locals("GOOGLE_AUTH_TOKEN") 
+    
+    // 2. ตรวจสอบว่ามีข้อมูลไหม (ป้องกัน Nil Pointer)
+    if rawToken == nil {
+        return utils.ResponseJSON(c, fiber.StatusUnauthorized, "Unauthorized", "Firebase token not found in context", nil)
+    }
+
+    // 3. Type Assertion แปลง interface{} เป็น *auth.Token
+    googleAuthToken, ok := rawToken.(*fbauth.Token)
+    if !ok {
+        return utils.ResponseJSON(c, fiber.StatusInternalServerError, "Internal Server Error", "Invalid token type", nil)
+    }
+
+    // 4. ส่งเข้าไปใน Usecase
+    token, err := a.UsersUsecase.LoginWithGoogle(googleAuthToken)
+
+    if err != nil {
+        return utils.ResponseJSON(c, fiber.StatusInternalServerError, "Failed to login with Google", err.Error(), nil)
+    }
+
+    return utils.ResponseJSON(c, fiber.StatusOK, "Login with Google successful", "", fiber.Map{
+        "token": token,
+    })
+}
+
+func (a *UsersHandler) RegisterWithGoogle(c fiber.Ctx) error {
+    // 1. ดึง Firebase Token จาก Middleware (ใช้ Key เดียวกับที่ตั้งไว้)
+    rawToken := c.Locals("GOOGLE_AUTH_TOKEN")
+    if rawToken == nil {
+        return utils.ResponseJSON(c, 401, "Unauthorized", "Firebase token missing", nil)
+    }
+    fbUser := rawToken.(*fbauth.Token)
+
+    // 3. เรียก Usecase
+    token, err := a.UsersUsecase.RegisterWithGoogle(fbUser)
+    if err != nil {
+        return utils.ResponseJSON(c, 400, "Registration failed", err.Error(), nil)
+    }
+
+    return utils.ResponseJSON(c, 201, "Registered successfully", "", fiber.Map{
+        "token": token,
     })
 }

@@ -28,11 +28,14 @@ func (g *UsersGorm) Register(Users *Entities.Users) error {
 }
 
 func (g *UsersGorm) GetUserByEmail(email string) (*Entities.Users, error) {
-    var user Entities.Users
-    if err := g.db.Where("email = ?", email).First(&user).Error; err != nil {
-        return nil, err
-    }
-    return &user, nil
+	var user Entities.Users
+	if err := g.db.Where("email = ?", email).First(&user).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &user, nil
 }
 
 func (g *UsersGorm) CreateCharacter(Users *Entities.Users) error {
@@ -46,11 +49,14 @@ func (g *UsersGorm) CreateCharacter(Users *Entities.Users) error {
 }
 
 func (g *UsersGorm) GetUserByUsername(username string) (*Entities.Users, error) {
-    var user Entities.Users
-    if err := g.db.Where("username = ?", username).First(&user).Error; err != nil {
-        return nil, err
-    }
-    return &user, nil
+	var user Entities.Users
+	if err := g.db.Where("username = ?", username).First(&user).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+            return nil, nil
+        }
+		return nil, err
+	}
+	return &user, nil
 }
 
 func (g *UsersGorm) GetUserByID(userID uint) (*Entities.Users, error) {
