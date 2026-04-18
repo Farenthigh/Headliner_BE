@@ -1,11 +1,10 @@
 package UsersAdapter
 
 import (
-    UsersModels "headliner-be/model/users"
-    UsersUsecase "headliner-be/usecase/users"
-    "headliner-be/utils"
+	UsersModels "headliner-be/model/users"
+	UsersUsecase "headliner-be/usecase/users"
+	"headliner-be/utils"
 
-    "github.com/gofiber/fiber/v3"
 	fbauth "firebase.google.com/go/v4/auth"
 	"github.com/gofiber/fiber/v3"
 )
@@ -132,7 +131,7 @@ func (a *UsersHandler) UpdateChatbotName(c fiber.Ctx) error {
 
     return utils.ResponseJSON(c, fiber.StatusOK, "Chatbot name updated successfully", "", fiber.Map{
         "chatbot_name": input.ChatbotName,
-	return utils.ResponseJSON(c, fiber.StatusOK, message, "", nil)
+    })
 }
 func (a *UsersHandler) LoginWithGoogle(c fiber.Ctx) error {
     // 1. ดึงข้อมูลจาก Locals (ต้องสะกด Key ให้ตรงกับใน Middleware)
