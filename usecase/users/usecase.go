@@ -2,11 +2,13 @@ package UsersUsecase
 
 import (
 	"errors"
+	"fmt"
 
 	Entities "headliner-be/entities"
 	UsersModels "headliner-be/model/users"
 	"headliner-be/utils"
 
+	"firebase.google.com/go/v4/auth"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -19,6 +21,8 @@ type UsersUsecase interface {
 	UpdateUsername(uint, *UsersModels.UpdateUsernameInput) (string, error)
 	UpdatePassword(uint, *UsersModels.UpdatePasswordInput) (string, error)
 	UpdateChatbotName(uint, string) error
+	LoginWithGoogle(*auth.Token) (string, error)
+	RegisterWithGoogle(*auth.Token) (string, error)
 
 }
 
@@ -157,4 +161,58 @@ func (service *UsersService) UpdateChatbotName(userID uint, newName string) erro
         return err
     }
     return nil
+}
+func (service *UsersService) LoginWithGoogle(firebaseToken *auth.Token) (string, error) {
+
+    email := firebaseToken.Claims["email"].(string)
+
+    // 2. เช็คว่ามี User หรือยัง
+    existingUser, err := service.usersRepo.GetUserByEmail(email)
+    if err != nil {
+        return "", err
+    }
+
+    // 3. ถ้าไม่มี User ให้ return error (ไม่สมัครให้สุ่มสี่สุ่มห้า)
+    if existingUser == nil {
+        return "", fmt.Errorf("user not found, please register first")
+    }
+
+    // 4. ถ้ามีแล้ว ก็ออก JWT ของระบบเราปกติ
+    token, err := utils.CreateToken(existingUser.ID, existingUser.Email, existingUser.Username)
+	if err != nil {
+		return "Failed to create token", err
+	}
+	return token, nil
+}
+func (s *UsersService) RegisterWithGoogle(fbUser *auth.Token) (string, error) {
+    // 1. ดึง Email จาก Firebase
+    email, ok := fbUser.Claims["email"].(string)
+    if !ok {
+        return "Email not found in token", fmt.Errorf("email claim missing")
+    }
+	fmt.Println(email)
+	
+    
+    // 2. ตรวจสอบ User ซ้ำ
+    existingUser, err := s.usersRepo.GetUserByEmail(email)
+    if err != nil {
+        return "Database error", err
+    }
+    if existingUser != nil {
+        return "This email is already registered", fmt.Errorf("email already exists")
+    }
+
+    newUser := &Entities.Users{
+        Email:    email,
+        Password: "",       // ไม่มีรหัสผ่านสำหรับ Google Provider
+        Provider: "google", // ระบุที่มา
+    }
+
+    // 4. บันทึกลง Database
+    if err := s.usersRepo.Register(newUser); err != nil {
+        return "Failed to register user", err
+    }
+
+    // 5. คืนค่า Message เหมือนฟังก์ชัน Register ปกติ
+    return "User registered successfully", nil
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"headliner-be/config"
 	Entities "headliner-be/entities"
+	"headliner-be/utils"
 
 	"headliner-be/routers"
 
@@ -23,6 +24,7 @@ func main() {
 	}
 	db.AutoMigrate(&Entities.Users{}, &Entities.StageLog{}, &Entities.Leaderboard{})//สร้าง table อัตโนมัติ
 	app := fiber.New()
+	utils.InitFirebase()
 
 	Entities.Init(db, app)
 
@@ -33,6 +35,7 @@ func main() {
 	routers.InitAchievementRoute(app, db)
 
 	routers.InitStageRoute(app, db)
+	routers.InitSavingStageRoute(app, db)
 	routers.InitLeaderboardRoute(app, db)
 
 	app.Listen(fmt.Sprintf(":%s", config.Port))

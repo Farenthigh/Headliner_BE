@@ -17,6 +17,8 @@ func InitUsersRoute(app *fiber.App, db *gorm.DB) {
 	users := app.Group("/users")
 	users.Post("/register", usersHandler.Register)
 	users.Post("/login", usersHandler.Login)
+	users.Post("/register-with-google",utils.FirebaseAuth, usersHandler.RegisterWithGoogle)
+	users.Post("/login-with-google", utils.FirebaseAuth, usersHandler.LoginWithGoogle)
 	users.Post("/createcharacter", utils.IsExist, usersHandler.CreateCharacter)
 	users.Get("/data", utils.IsExist, usersHandler.GetUserData)
 
