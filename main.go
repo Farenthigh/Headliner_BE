@@ -12,7 +12,16 @@ import (
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	swagger "github.com/Flussen/swagger-fiber-v3"
+	_ "headliner-be/docs"
 )
+
+// @title           Headliner API
+// @version         1.0
+// @description     API Documentation สำหรับเกม Headliner
+// @host            localhost:8080
+// @BasePath        /
 
 func main() {
 	godotenv.Load()
@@ -25,6 +34,7 @@ func main() {
 	db.AutoMigrate(&Entities.Users{}, &Entities.StageLog{}, &Entities.Leaderboard{})//สร้าง table อัตโนมัติ
 	app := fiber.New()
 	utils.InitFirebase()
+	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	Entities.Init(db, app)
 
