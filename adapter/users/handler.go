@@ -19,6 +19,17 @@ func NewUsersAdapter(usersUsecase UsersUsecase.UsersUsecase) *UsersHandler {
     }
 }
 
+// Register godoc
+// @Summary      Register
+// @Description  ใช้สำหรับลงทะเบียนผู้ใช้ใหม่เข้าสู่ระบบ
+// @Tags         Users
+// @Accept       json
+// @Produce      json
+// @Param        request body UsersModels.RegisterInput true "ข้อมูลการสมัครสมาชิก"
+// @Success      200  {object}  map[string]interface{} "สมัครสำเร็จ"
+// @Failure      400  {object}  map[string]interface{} "ข้อมูลไม่ถูกต้อง"
+// @Failure      500  {object}  map[string]interface{} "เซิร์ฟเวอร์มีปัญหา"
+// @Router       /users/register [post]
 func (a *UsersHandler) Register(c fiber.Ctx) error {
     var users UsersModels.RegisterInput
     if err := c.Bind().Body(&users); err != nil {
@@ -34,6 +45,17 @@ func (a *UsersHandler) Register(c fiber.Ctx) error {
     return utils.ResponseJSON(c, fiber.StatusOK, message, "", nil)
 }
 
+// Login godoc
+// @Summary      Login
+// @Description  ใช้สำหรับล็อกอินเข้าเกมและรับ Token
+// @Tags         Users
+// @Accept       json
+// @Produce      json
+// @Param        request body UsersModels.LoginInput true "ข้อมูลการเข้าสู่ระบบ"
+// @Success      200  {object}  map[string]interface{} "ล็อกอินสำเร็จ"
+// @Failure      400  {object}  map[string]interface{} "ข้อมูลไม่ถูกต้อง"
+// @Failure      500  {object}  map[string]interface{} "เซิร์ฟเวอร์มีปัญหา"
+// @Router       /users/login [post]
 func (a *UsersHandler) Login(c fiber.Ctx) error {
     var users UsersModels.LoginInput
     if err := c.Bind().Body(&users); err != nil {
@@ -48,6 +70,17 @@ func (a *UsersHandler) Login(c fiber.Ctx) error {
     })
 }
 
+// CreateCharacter godoc
+// @Summary      สร้างตัวละคร
+// @Description  ใช้สำหรับสร้างหรือตั้งค่าตัวละครของผู้เล่น
+// @Tags         Users
+// @Accept       json
+// @Produce      json
+// @Param        request body UsersModels.CreateCharacterInput true "ข้อมูลตัวละคร"
+// @Success      200  {object}  map[string]interface{} "สร้างตัวละครสำเร็จ"
+// @Failure      400  {object}  map[string]interface{} "ข้อมูลไม่ถูกต้อง"
+// @Failure      500  {object}  map[string]interface{} "เซิร์ฟเวอร์มีปัญหา"
+// @Router       /users/createcharacter [post]
 func (a *UsersHandler) CreateCharacter(c fiber.Ctx) error {
     var users UsersModels.CreateCharacterInput
     if err := c.Bind().Body(&users); err != nil {
@@ -62,6 +95,14 @@ func (a *UsersHandler) CreateCharacter(c fiber.Ctx) error {
     return utils.ResponseJSON(c, fiber.StatusOK, message, "", nil)
 }
 
+// GetUserData godoc
+// @Summary      ดึงข้อมูลผู้ใช้งาน
+// @Description  ดึงข้อมูลโปรไฟล์ ตัวละคร และชื่อบอทของผู้เล่นปัจจุบัน
+// @Tags         Users
+// @Produce      json
+// @Success      200  {object}  map[string]interface{} "ดึงข้อมูลสำเร็จ"
+// @Failure      500  {object}  map[string]interface{} "เซิร์ฟเวอร์มีปัญหา"
+// @Router       /users/data [get]
 func (a *UsersHandler) GetUserData(c fiber.Ctx) error {
     userID := c.Locals("userID")
 
@@ -78,6 +119,16 @@ func (a *UsersHandler) GetUserData(c fiber.Ctx) error {
     })
 }
 
+// UpdateUsername godoc
+// @Summary      อัปเดตชื่อผู้ใช้งาน
+// @Description  เปลี่ยนชื่อผู้ใช้งาน (Username) ของผู้เล่น
+// @Tags         Users
+// @Accept       json
+// @Produce      json
+// @Param        request body UsersModels.UpdateUsernameInput true "ชื่อผู้ใช้งานใหม่"
+// @Success      200  {object}  map[string]interface{} "อัปเดตสำเร็จ"
+// @Failure      400  {object}  map[string]interface{} "ข้อมูลไม่ถูกต้อง"
+// @Router       /users/update-username [put]
 func (a *UsersHandler) UpdateUsername(c fiber.Ctx) error {
     var input UsersModels.UpdateUsernameInput
 
@@ -96,6 +147,16 @@ func (a *UsersHandler) UpdateUsername(c fiber.Ctx) error {
     return utils.ResponseJSON(c, fiber.StatusOK, message, "", nil)
 }
 
+// UpdatePassword godoc
+// @Summary      อัปเดตรหัสผ่าน
+// @Description  เปลี่ยนรหัสผ่านของผู้เล่น
+// @Tags         Users
+// @Accept       json
+// @Produce      json
+// @Param        request body UsersModels.UpdatePasswordInput true "รหัสผ่านใหม่"
+// @Success      200  {object}  map[string]interface{} "อัปเดตสำเร็จ"
+// @Failure      400  {object}  map[string]interface{} "ข้อมูลไม่ถูกต้อง"
+// @Router       /users/update-password [put]
 func (a *UsersHandler) UpdatePassword(c fiber.Ctx) error {
     var input UsersModels.UpdatePasswordInput
 
@@ -114,6 +175,17 @@ func (a *UsersHandler) UpdatePassword(c fiber.Ctx) error {
     return utils.ResponseJSON(c, fiber.StatusOK, message, "", nil)
 }
 
+// UpdateChatbotName godoc
+// @Summary      Update Chatbot Name
+// @Description  เปลี่ยนชื่อแชทบอทที่ปรึกษาทางการเงินของผู้เล่น
+// @Tags         Users
+// @Accept       json
+// @Produce      json
+// @Param        request body UsersModels.UpdateChatbotRequest true "ชื่อแชทบอทใหม่"
+// @Success      200  {object}  map[string]interface{} "อัปเดตสำเร็จ"
+// @Failure      400  {object}  map[string]interface{} "ข้อมูลไม่ถูกต้อง"
+// @Failure      500  {object}  map[string]interface{} "เซิร์ฟเวอร์มีปัญหา"
+// @Router       /users/update-chatbot [post]
 func (a *UsersHandler) UpdateChatbotName(c fiber.Ctx) error {
     var input UsersModels.UpdateChatbotRequest
 
@@ -133,6 +205,16 @@ func (a *UsersHandler) UpdateChatbotName(c fiber.Ctx) error {
         "chatbot_name": input.ChatbotName,
     })
 }
+
+// LoginWithGoogle godoc
+// @Summary      Login with Google
+// @Description  ล็อกอินเข้าเกมผ่าน Firebase Google Auth
+// @Tags         Users
+// @Produce      json
+// @Success      200  {object}  map[string]interface{} "ล็อกอินสำเร็จ"
+// @Failure      401  {object}  map[string]interface{} "ไม่มีสิทธิ์เข้าถึง"
+// @Failure      500  {object}  map[string]interface{} "เซิร์ฟเวอร์มีปัญหา"
+// @Router       /users/login-with-google [post]
 func (a *UsersHandler) LoginWithGoogle(c fiber.Ctx) error {
     // 1. ดึงข้อมูลจาก Locals (ต้องสะกด Key ให้ตรงกับใน Middleware)
     rawToken := c.Locals("GOOGLE_AUTH_TOKEN") 
@@ -160,6 +242,15 @@ func (a *UsersHandler) LoginWithGoogle(c fiber.Ctx) error {
     })
 }
 
+// RegisterWithGoogle godoc
+// @Summary      Register with Google
+// @Description  ลงทะเบียนผู้ใช้ใหม่ผ่าน Firebase Google Auth
+// @Tags         Users
+// @Produce      json
+// @Success      201  {object}  map[string]interface{} "สมัครสำเร็จ"
+// @Failure      400  {object}  map[string]interface{} "ข้อมูลไม่ถูกต้อง"
+// @Failure      401  {object}  map[string]interface{} "ไม่มีสิทธิ์เข้าถึง"
+// @Router       /users/register-with-google [post]
 func (a *UsersHandler) RegisterWithGoogle(c fiber.Ctx) error {
     // 1. ดึง Firebase Token จาก Middleware (ใช้ Key เดียวกับที่ตั้งไว้)
     rawToken := c.Locals("GOOGLE_AUTH_TOKEN")

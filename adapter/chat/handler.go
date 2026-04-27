@@ -15,6 +15,17 @@ func NewChatHandler(u usecase_chat.ChatUsecase) *ChatHandler {
     return &ChatHandler{usecase: u}
 }
 
+// Chat godoc
+// @Summary      ส่งข้อความคุยกับแชทบอท
+// @Description  ส่งคำถามหรือข้อความไปยังระบบ AI LLM (Mystery Man) เพื่อขอคำปรึกษาทางการเงิน
+// @Tags         Chat
+// @Accept       json
+// @Produce      json
+// @Param        request body model_chat.ChatRequest true "ข้อมูล Player ID และข้อความที่จะส่ง"
+// @Success      200  {object}  map[string]interface{} "ได้รับคำตอบจาก AI สำเร็จ"
+// @Failure      400  {object}  map[string]interface{} "ข้อมูลไม่ถูกต้อง (เช่น ขาด Player ID หรือ ข้อความ)"
+// @Failure      500  {object}  map[string]interface{} "เซิร์ฟเวอร์หรือระบบ AI มีปัญหา"
+// @Router       /api/chat [post]
 func (h *ChatHandler) Chat(c fiber.Ctx) error {
     var req model_chat.ChatRequest
 
