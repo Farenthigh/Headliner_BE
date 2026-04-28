@@ -190,9 +190,7 @@ func (s *UsersService) RegisterWithGoogle(fbUser *auth.Token) (string, error) {
     if !ok {
         return "Email not found in token", fmt.Errorf("email claim missing")
     }
-	fmt.Println(email)
 	
-    
     // 2. ตรวจสอบ User ซ้ำ
     existingUser, err := s.usersRepo.GetUserByEmail(email)
     if err != nil {
@@ -201,7 +199,8 @@ func (s *UsersService) RegisterWithGoogle(fbUser *auth.Token) (string, error) {
     if existingUser != nil {
         return "This email is already registered", fmt.Errorf("email already exists")
     }
-
+	fmt.Println(email)
+	
     newUser := &Entities.Users{
         Email:    email,
         Password: "",       // ไม่มีรหัสผ่านสำหรับ Google Provider
