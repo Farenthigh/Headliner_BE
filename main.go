@@ -5,6 +5,7 @@ import (
 	"headliner-be/config"
 	Entities "headliner-be/entities"
 	"headliner-be/utils"
+	"log"
 
 	"headliner-be/routers"
 
@@ -13,8 +14,9 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	swagger "github.com/Flussen/swagger-fiber-v3"
 	_ "headliner-be/docs"
+
+	swagger "github.com/Flussen/swagger-fiber-v3"
 )
 
 // @title           Headliner API
@@ -24,13 +26,21 @@ import (
 // @BasePath        /
 
 func main() {
-	godotenv.Load()
+_ = godotenv.Load() 
+// -----------------
 
-	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", config.DbHost, config.DbPort, config.DbUser, config.DbPassword, config.DbSchema)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		panic("failed to connect database")
-	}
+dsn := config.DbURL
+if dsn == "" {
+    dsn = fmt.Sprintf("postgres://%s:%s@%s:%s/%s", 
+        config.DbUser, config.DbPassword, config.DbHost, config.DbPort, config.DbSchema)
+}
+
+db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+if err != nil {
+    // ใส่ log เพื่อดูว่า dsn ที่สร้างออกมาหน้าตาเป็นยังไง (ช่วย debug ได้ดีมาก)
+    log.Printf("Current DSN: %s", dsn) 
+    panic(fmt.Sprintf("failed to connect database: %v", err))
+}
 	db.AutoMigrate(&Entities.Users{}, &Entities.StageLog{}, &Entities.Leaderboard{})//สร้าง table อัตโนมัติ
 	app := fiber.New()
 	utils.InitFirebase()
