@@ -10,7 +10,6 @@ import (
 	"headliner-be/routers"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
@@ -26,14 +25,14 @@ import (
 // @BasePath        /
 
 func main() {
-_ = godotenv.Load() 
-// -----------------
 
-dsn := config.DbURL
-if dsn == "" {
-    dsn = fmt.Sprintf("postgres://%s:%s@%s:%s/%s", 
-        config.DbUser, config.DbPassword, config.DbHost, config.DbPort, config.DbSchema)
-}
+	fmt.Println("------- Starting Services -------")
+
+	dsn := config.DbURL
+	if dsn == "" {
+	    dsn = fmt.Sprintf("postgres://%s:%s@%s:%s/%s", 
+	    config.DbUser, config.DbPassword, config.DbHost, config.DbPort, config.DbSchema)
+	}
 
 db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 if err != nil {
