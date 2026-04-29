@@ -58,6 +58,7 @@ if err != nil {
 	routers.InitSavingStageRoute(app, db)
 	routers.InitLeaderboardRoute(app, db)
 
-	app.Listen(fmt.Sprintf(":%s", config.Port))
+	// app.Listen(fmt.Sprintf(":%s", config.Port))
+	app.Listen(":8000")
 
 }
