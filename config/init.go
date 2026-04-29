@@ -1,17 +1,24 @@
 package config
 
 import (
-	"log"
-
-	"github.com/joho/godotenv"
+	"os"
+	"path/filepath"
+	"runtime"
 )
 
-func Initenv() {
-    // 1. ลองหาไฟล์ .env ใน Folder ปัจจุบันก่อน
-    err := godotenv.Load()
-    if err != nil {
-        // 2. ถ้าหาไม่เจอ ไม่ต้องสั่ง Fatal! 
-        // แค่ Log บอกไว้เผื่อเราลืมตั้งค่าที่หน้า Cloud
-        log.Println("Note: .env file not found, will use system environment variables")
-    }
+func Initenv() string {
+	_, filename, _, _ := runtime.Caller(0)
+	currentFileDir := filepath.Dir(filename)
+
+	// Walk up the directory tree to find the .env file
+	var configPath string
+	for {
+		configPath = filepath.Join(currentFileDir, ".env")
+		if _, err := os.Stat(configPath); !os.IsNotExist(err) {
+			break
+		}
+		parentDir := filepath.Dir(currentFileDir)
+		currentFileDir = parentDir
+	}
+	return configPath
 }

@@ -17,10 +17,10 @@ var (
 )
 
 func init() {
-	// configPath := ()
+	configPath := Initenv()
 
 	// Load the .env file
-	err := godotenv.Load()
+	err := godotenv.Load(configPath)
 	if err != nil {
 		log.Fatalf("Problem loading .env file: %v", err)
 		os.Exit(-1)
