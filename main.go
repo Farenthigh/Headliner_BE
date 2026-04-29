@@ -58,7 +58,12 @@ if err != nil {
 	routers.InitSavingStageRoute(app, db)
 	routers.InitLeaderboardRoute(app, db)
 
-	// app.Listen(fmt.Sprintf(":%s", config.Port))
-	app.Listen(":8000")
+	port := config.Port
+    if port == "" {
+        port = "8080"
+    }
+
+    // สั่งให้แอปฟังที่พอร์ตนั้น
+    log.Fatal(app.Listen(":" + port))
 
 }
