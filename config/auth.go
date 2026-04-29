@@ -11,7 +11,7 @@ var (
 	Jwt_secret string
 )
 
-func init() {
+func InitAuth() {
 	configpath := Initenv()
 
 	err := godotenv.Load(configpath)

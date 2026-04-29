@@ -9,7 +9,7 @@ import (
 
 var Port string
 
-func init() {
+func InitSetting() {
 	configpath := Initenv()
 
 	err := godotenv.Load(configpath)

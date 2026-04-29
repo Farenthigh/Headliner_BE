@@ -80,6 +80,10 @@ import (
 func main() {
 	// พยายามโหลด .env ถ้าไม่มี (เช่นบน Cloud) จะข้ามไปอ่านค่าจากระบบแทน
 	_ = godotenv.Load()
+	config.Initenv()
+	config.InitDatabase()
+	config.InitAuth()
+	config.InitSetting()
 
 	// ดึงค่า PORT จาก Env ถ้าไม่ได้ตั้งไว้ให้ใช้ 8080
 	port := config.Port

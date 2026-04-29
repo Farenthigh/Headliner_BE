@@ -16,7 +16,7 @@ var (
 	DbURL      string
 )
 
-func init() {
+func InitDatabase() {
 	configPath := Initenv()
 
 	// Load the .env file
