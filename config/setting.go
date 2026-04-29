@@ -10,9 +10,9 @@ import (
 var Port string
 
 func init() {
-	configpath := Initenv()
+	// configpath := Initenv()
 
-	err := godotenv.Load(configpath)
+	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Problem loading .env file: %v", err)
 		os.Exit(-1)
