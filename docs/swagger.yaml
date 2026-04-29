@@ -1,0 +1,833 @@
+basePath: /
+definitions:
+  AchievementAdapter.UnlockAchievementRequest:
+    properties:
+      achievement_id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  Entities.Achievement:
+    type: object
+  Entities.Leaderboard:
+    type: object
+  UsersModels.CreateCharacterInput:
+    properties:
+      character:
+        type: integer
+      username:
+        type: string
+    type: object
+  UsersModels.LoginInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  UsersModels.RegisterInput:
+    properties:
+      confirm_password:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  UsersModels.UpdateChatbotRequest:
+    properties:
+      chatbot_name:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  UsersModels.UpdatePasswordInput:
+    properties:
+      currentPassword:
+        type: string
+      newPassword:
+        type: string
+    type: object
+  UsersModels.UpdateUsernameInput:
+    properties:
+      username:
+        type: string
+    type: object
+  model_chat.ChatRequest:
+    properties:
+      message:
+        type: string
+      player_id:
+        type: string
+    type: object
+  savingstage.SaveStageRequest:
+    properties:
+      stage:
+        type: integer
+      stars:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  stage.SaveStageRequest:
+    properties:
+      stage:
+        type: integer
+      stars:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API Documentation สำหรับเกม Headliner
+  title: Headliner API
+  version: "1.0"
+paths:
+  /achievements/:
+    get:
+      description: ดึงรายการเงื่อนไขความสำเร็จ (Achievement) ทั้งหมดที่มีในระบบ
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ดึงข้อมูลสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: เซิร์ฟเวอร์มีปัญหา
+          schema:
+            additionalProperties: true
+            type: object
+      summary: ดึงข้อมูล Achievement ทั้งหมด
+      tags:
+      - Achievement
+    post:
+      consumes:
+      - application/json
+      description: เพิ่มข้อมูลความสำเร็จ (Achievement) ใหม่เข้าสู่ระบบ
+      parameters:
+      - description: ข้อมูล Achievement ที่ต้องการสร้าง
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/Entities.Achievement'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: สร้างสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: ข้อมูลไม่ถูกต้อง
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: เซิร์ฟเวอร์มีปัญหา
+          schema:
+            additionalProperties: true
+            type: object
+      summary: สร้าง Achievement ใหม่
+      tags:
+      - Achievement
+  /achievements/{id}:
+    get:
+      description: ค้นหาและดึงรายละเอียดของ Achievement แบบเจาะจงด้วย ID
+      parameters:
+      - description: รหัส Achievement ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ดึงข้อมูลสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: รูปแบบ ID ไม่ถูกต้อง
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: ไม่พบข้อมูล
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: เซิร์ฟเวอร์มีปัญหา
+          schema:
+            additionalProperties: true
+            type: object
+      summary: ดึงข้อมูล Achievement ตาม ID
+      tags:
+      - Achievement
+  /achievements/unlock:
+    post:
+      consumes:
+      - application/json
+      description: บันทึกข้อมูลว่าผู้เล่นได้รับ (Unlock) Achievement นี้เรียบร้อยแล้ว
+      parameters:
+      - description: ข้อมูล User ID และ Achievement ID
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/AchievementAdapter.UnlockAchievementRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ปลดล็อกสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: ข้อมูลไม่ถูกต้อง
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: เซิร์ฟเวอร์มีปัญหา
+          schema:
+            additionalProperties: true
+            type: object
+      summary: ปลดล็อก Achievement ให้ผู้เล่น
+      tags:
+      - Achievement
+  /achievements/user/{userId}:
+    get:
+      description: ดูรายการว่าผู้เล่นคนนี้ทำเงื่อนไข Achievement อะไรสำเร็จไปแล้วบ้าง
+      parameters:
+      - description: รหัส User ID ของผู้เล่น
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ดึงข้อมูลสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: รูปแบบ User ID ไม่ถูกต้อง
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: เซิร์ฟเวอร์มีปัญหา
+          schema:
+            additionalProperties: true
+            type: object
+      summary: ดึงรายการ Achievement ที่ผู้เล่นปลดล็อกแล้ว
+      tags:
+      - Achievement
+  /api/chat:
+    post:
+      consumes:
+      - application/json
+      description: ส่งคำถามหรือข้อความไปยังระบบ AI LLM (Mystery Man) เพื่อขอคำปรึกษาทางการเงิน
+      parameters:
+      - description: ข้อมูล Player ID และข้อความที่จะส่ง
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model_chat.ChatRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ได้รับคำตอบจาก AI สำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: ข้อมูลไม่ถูกต้อง (เช่น ขาด Player ID หรือ ข้อความ)
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: เซิร์ฟเวอร์หรือระบบ AI มีปัญหา
+          schema:
+            additionalProperties: true
+            type: object
+      summary: ส่งข้อความคุยกับแชทบอท
+      tags:
+      - Chat
+  /leaderboard/:
+    get:
+      description: ดึงข้อมูลอันดับและคะแนนรวมของผู้เล่นทั้งหมดในระบบเพื่อแสดงผลบน
+        Leaderboard
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ดึงข้อมูลสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: เซิร์ฟเวอร์มีปัญหา
+          schema:
+            additionalProperties: true
+            type: object
+      summary: ดึงข้อมูลก Leaderboard
+      tags:
+      - Leaderboard
+    post:
+      consumes:
+      - application/json
+      description: บันทึกหรืออัปเดตคะแนนรวมของผู้เล่นเพื่อจัดอันดับบน Leaderboard
+      parameters:
+      - description: ข้อมูลผู้เล่นและคะแนนที่ต้องการบันทึก
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/Entities.Leaderboard'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: บันทึกคะแนนสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: รูปแบบข้อมูลไม่ถูกต้อง
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: เซิร์ฟเวอร์มีปัญหา
+          schema:
+            additionalProperties: true
+            type: object
+      summary: บันทึกคะแนนลง Leaderboard
+      tags:
+      - Leaderboard
+  /saving-stage/leaderboard:
+    get:
+      description: ดึงรายการผู้เล่นที่มีคะแนนสูงสุดตามจำนวน limit ที่กำหนด
+      parameters:
+      - description: จำนวนอันดับที่ต้องการ (เริ่มต้น 50)
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ดึงข้อมูลสำเร็จ
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+      summary: ดึงอันดับ Leaderboard ของ SavingGame
+      tags:
+      - SavingStage
+  /saving-stage/leaderboard/me:
+    get:
+      description: ดึงข้อมูลอันดับปัจจุบันของผู้เล่นตาม User ID
+      parameters:
+      - description: User ID ของผู้เล่น
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ดึงข้อมูลสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+      summary: ดึงอันดับปัจจุบันของผู้เล่นตาม User ID
+      tags:
+      - SavingStage
+  /saving-stage/progress:
+    get:
+      description: รายการด่านทั้งหมดที่ผู้เล่นเคยเล่นผ่านไปแล้ว
+      parameters:
+      - description: User ID ของผู้เล่น
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ดึงข้อมูลสำเร็จ
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+      summary: ดึงความคืบหน้าการเล่นด่านทั้งหมด
+      tags:
+      - SavingStage
+  /saving-stage/save:
+    post:
+      consumes:
+      - application/json
+      description: บันทึกคะแนน จำนวนดาว และด่านที่เล่นจบของผู้เล่น
+      parameters:
+      - description: ข้อมูลการบันทึกด่าน
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/savingstage.SaveStageRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: บันทึกสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+      summary: บันทึกผลการเล่นด่านออมเงิน
+      tags:
+      - SavingStage
+  /saving-stage/stars:
+    get:
+      description: ดูว่าในแต่ละด่านที่ผ่านมา ผู้เล่นได้ไปกี่ดาว (0-3 ดาว)
+      parameters:
+      - description: User ID ของผู้เล่น
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ดึงข้อมูลสำเร็จ
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+      summary: ดึงจำนวนดาวที่ได้ในแต่ละด่าน
+      tags:
+      - SavingStage
+  /saving-stage/unlock:
+    get:
+      description: เช็คว่าผู้เล่นเล่นถึงด่านไหนและด่านถัดไปคือด่านอะไร
+      parameters:
+      - description: User ID ของผู้เล่น
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ดึงข้อมูลสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+      summary: ดึงข้อมูลด่านที่ปลดล็อก
+      tags:
+      - SavingStage
+  /stage/leaderboard:
+    get:
+      description: ดึงรายการผู้เล่นที่มีคะแนนสูงสุดในโหมดปกติ
+      parameters:
+      - description: จำนวนอันดับที่ต้องการ (เริ่มต้น 50)
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ดึงข้อมูลสำเร็จ
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+      summary: ดึงอันดับ Leaderboard ของด่านปกติ
+      tags:
+      - Stage
+  /stage/leaderboard/me:
+    get:
+      description: ดึงข้อมูลอันดับปัจจุบันของผู้เล่นในโหมดปกติ
+      parameters:
+      - description: User ID ของผู้เล่น
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ดึงข้อมูลสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+      summary: เช็คอันดับของผู้เล่นในด่านปกติ
+      tags:
+      - Stage
+  /stage/progress:
+    get:
+      description: รายการด่านปกติทั้งหมดที่ผู้เล่นเคยเล่นผ่านไปแล้ว
+      parameters:
+      - description: User ID ของผู้เล่น
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ดึงข้อมูลสำเร็จ
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+      summary: ดึงความคืบหน้าการเล่นด่านปกติทั้งหมด
+      tags:
+      - Stage
+  /stage/save:
+    post:
+      consumes:
+      - application/json
+      description: บันทึกข้อมูลการเล่นจบด่าน คะแนน และดาวของผู้เล่นในโหมดปกติ
+      parameters:
+      - description: ข้อมูลการบันทึกด่าน
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/stage.SaveStageRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: บันทึกสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+      summary: บันทึกผลการเล่นด่านปกติ
+      tags:
+      - Stage
+  /stage/stars:
+    get:
+      description: ดูจำนวนดาวที่ทำได้ในแต่ละด่านของโหมดปกติ
+      parameters:
+      - description: User ID ของผู้เล่น
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ดึงข้อมูลสำเร็จ
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+      summary: ดึงจำนวนดาวที่ได้ในแต่ละด่านปกติ
+      tags:
+      - Stage
+  /stage/unlock:
+    get:
+      description: เช็คว่าในโหมดปกติผู้เล่นเล่นถึงด่านไหน
+      parameters:
+      - description: User ID ของผู้เล่น
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ดึงข้อมูลสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+      summary: ดึงข้อมูลด่านปกติที่ปลดล็อกล่าสุด
+      tags:
+      - Stage
+  /users/createcharacter:
+    post:
+      consumes:
+      - application/json
+      description: ใช้สำหรับสร้างหรือตั้งค่าตัวละครของผู้เล่น
+      parameters:
+      - description: ข้อมูลตัวละคร
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/UsersModels.CreateCharacterInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: สร้างตัวละครสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: ข้อมูลไม่ถูกต้อง
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: เซิร์ฟเวอร์มีปัญหา
+          schema:
+            additionalProperties: true
+            type: object
+      summary: สร้างตัวละคร
+      tags:
+      - Users
+  /users/data:
+    get:
+      description: ดึงข้อมูลโปรไฟล์ ตัวละคร และชื่อบอทของผู้เล่นปัจจุบัน
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ดึงข้อมูลสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: เซิร์ฟเวอร์มีปัญหา
+          schema:
+            additionalProperties: true
+            type: object
+      summary: ดึงข้อมูลผู้ใช้งาน
+      tags:
+      - Users
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: ใช้สำหรับล็อกอินเข้าเกมและรับ Token
+      parameters:
+      - description: ข้อมูลการเข้าสู่ระบบ
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/UsersModels.LoginInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ล็อกอินสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: ข้อมูลไม่ถูกต้อง
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: เซิร์ฟเวอร์มีปัญหา
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Login
+      tags:
+      - Users
+  /users/login-with-google:
+    post:
+      description: ล็อกอินเข้าเกมผ่าน Firebase Google Auth
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ล็อกอินสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: ไม่มีสิทธิ์เข้าถึง
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: เซิร์ฟเวอร์มีปัญหา
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Login with Google
+      tags:
+      - Users
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      description: ใช้สำหรับลงทะเบียนผู้ใช้ใหม่เข้าสู่ระบบ
+      parameters:
+      - description: ข้อมูลการสมัครสมาชิก
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/UsersModels.RegisterInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: สมัครสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: ข้อมูลไม่ถูกต้อง
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: เซิร์ฟเวอร์มีปัญหา
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Register
+      tags:
+      - Users
+  /users/register-with-google:
+    post:
+      description: ลงทะเบียนผู้ใช้ใหม่ผ่าน Firebase Google Auth
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: สมัครสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: ข้อมูลไม่ถูกต้อง
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: ไม่มีสิทธิ์เข้าถึง
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Register with Google
+      tags:
+      - Users
+  /users/update-chatbot:
+    post:
+      consumes:
+      - application/json
+      description: เปลี่ยนชื่อแชทบอทที่ปรึกษาทางการเงินของผู้เล่น
+      parameters:
+      - description: ชื่อแชทบอทใหม่
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/UsersModels.UpdateChatbotRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: อัปเดตสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: ข้อมูลไม่ถูกต้อง
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: เซิร์ฟเวอร์มีปัญหา
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update Chatbot Name
+      tags:
+      - Users
+  /users/update-password:
+    put:
+      consumes:
+      - application/json
+      description: เปลี่ยนรหัสผ่านของผู้เล่น
+      parameters:
+      - description: รหัสผ่านใหม่
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/UsersModels.UpdatePasswordInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: อัปเดตสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: ข้อมูลไม่ถูกต้อง
+          schema:
+            additionalProperties: true
+            type: object
+      summary: อัปเดตรหัสผ่าน
+      tags:
+      - Users
+  /users/update-username:
+    put:
+      consumes:
+      - application/json
+      description: เปลี่ยนชื่อผู้ใช้งาน (Username) ของผู้เล่น
+      parameters:
+      - description: ชื่อผู้ใช้งานใหม่
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/UsersModels.UpdateUsernameInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: อัปเดตสำเร็จ
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: ข้อมูลไม่ถูกต้อง
+          schema:
+            additionalProperties: true
+            type: object
+      summary: อัปเดตชื่อผู้ใช้งาน
+      tags:
+      - Users
+swagger: "2.0"

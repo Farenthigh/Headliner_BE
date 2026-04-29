@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"log"
 	"strings"
 
 	firebase "firebase.google.com/go/v4"
@@ -42,6 +43,11 @@ func FirebaseAuth(c fiber.Ctx) error {
 	}
 
 	// 3. ตรวจสอบกับ Firebase Singleton
+	if AuthClient == nil {
+    	log.Println("ERROR: Firebase AuthClient is not initialized")
+    	return fiber.NewError(fiber.StatusInternalServerError, "Internal server configuration error")
+	}
+
 	token, err := AuthClient.VerifyIDToken(context.Background(), parts[1])
 	if err != nil {
 		return fiber.NewError(fiber.StatusUnauthorized, "Invalid or expired token")

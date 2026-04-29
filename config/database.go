@@ -13,6 +13,7 @@ var (
 	DbUser     string
 	DbPassword string
 	DbSchema   string
+	DbURL      string
 )
 
 func init() {
@@ -24,7 +25,7 @@ func init() {
 		log.Fatalf("Problem loading .env file: %v", err)
 		os.Exit(-1)
 	}
-
+	DbURL = os.Getenv("DB_URL")
 	DbHost = os.Getenv("DB_HOST")
 	DbPort = os.Getenv("DB_PORT")
 	DbUser = os.Getenv("DB_USER")
