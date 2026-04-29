@@ -70,8 +70,8 @@
 package main
 
 import (
-	"headliner-be/config"
 	"log"
+	"os"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/joho/godotenv"
@@ -80,15 +80,11 @@ import (
 func main() {
 	// พยายามโหลด .env ถ้าไม่มี (เช่นบน Cloud) จะข้ามไปอ่านค่าจากระบบแทน
 	_ = godotenv.Load()
-	config.Initenv()
-	config.InitDatabase()
-	config.InitAuth()
-	config.InitSetting()
 
 	// ดึงค่า PORT จาก Env ถ้าไม่ได้ตั้งไว้ให้ใช้ 8080
-	port := config.Port
+	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "8081"
 	}
 
 	app := fiber.New()
@@ -97,7 +93,7 @@ func main() {
 	app.Get("/", func(c fiber.Ctx) error {
 		return c.JSON(fiber.Map{
 			"message": "Backend is running!",
-			"db_host": config.DbHost, // ลองดึงค่า Env มาโชว์
+			"db_host": os.Getenv("DB_HOST"), // ลองดึงค่า Env มาโชว์
 		})
 	})
 
