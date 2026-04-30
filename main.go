@@ -13,6 +13,7 @@ import (
 	"headliner-be/routers"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
@@ -52,6 +53,12 @@ if err != nil {
 }
 	db.AutoMigrate(&Entities.Users{}, &Entities.StageLog{}, &Entities.Leaderboard{})//สร้าง table อัตโนมัติ
 	app := fiber.New()
+	// --- [จุดที่แก้ไข] เพิ่ม CORS Middleware ก่อนเรียกใช้ Routes ---
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"*"}, // อนุญาตทุก Domain เพื่อให้เครื่องอื่นเข้าถึงได้
+		AllowMethods: []string{"GET", "POST", "HEAD", "PUT", "DELETE", "PATCH", "OPTIONS"},
+		AllowHeaders: []string{"Origin", "Content-Type", "Accept", "Authorization"},
+	}))
 	utils.InitFirebase()
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
