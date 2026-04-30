@@ -24,7 +24,7 @@ import (
 // @title           Headliner API
 // @version         1.0
 // @description     API Documentation สำหรับเกม Headliner
-// @host            https://headliner-be.onrender.com
+// @host            headliner-be.onrender.com
 // @BasePath        /
 
 func main() {
