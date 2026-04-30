@@ -14,7 +14,7 @@ import (
 var AuthClient *auth.Client
 
 func InitFirebase() error {
-	opt := option.WithCredentialsFile("./etc/secrets/serviceAccountKey.json")
+	opt := option.WithCredentialsFile("/etc/secrets/serviceAccountKey.json")
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
 		return err
