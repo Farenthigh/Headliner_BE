@@ -78,7 +78,7 @@ definitions:
       user_id:
         type: integer
     type: object
-host: localhost:8080
+host: https://headliner-be.onrender.com
 info:
   contact: {}
   description: API Documentation สำหรับเกม Headliner
